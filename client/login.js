@@ -1,33 +1,34 @@
 Template.login.events({
-  "submit .userName" (event, template) {
-    event.preventDefault();
-    let username = document.getElementById('exampleInputUser').value.trim()
-    console.log(username);
-
-    Accounts.createUser({
-            email: username,
-            password: 'dfsgsefhse5rtawrgagfgad',
-            function(err) {
-              console.log(err)
-            }
-        });
-
-  },
   'click .btn-sm' () {
-    console.log(123)
+    console.log('logged out')
     Meteor.logout()
   },
   "submit .noPass" (event, template) {
     event.preventDefault();
     let username = document.getElementById('noPass').value.trim()
-    let password = '123'
 
     console.log(username);
 
 
-    Meteor.loginWithPassword({email: username}, password, function(error) {
-      console.log(error)
-    });
+    // Meteor.call('createNoPassUser', username)
+
+    Meteor.callPromise('createNoPassUser', username).then(res => {
+      console.log(res)
+
+      let loginRequest = {username: username}
+
+      // login user after creation
+      Accounts.callLoginMethod({
+        methodArguments: [loginRequest],
+        userCallback: function (err) {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log('logged in')
+            }
+        }});
+
+    })
 
   }
 });

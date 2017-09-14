@@ -4,7 +4,7 @@ Template.hooklogin.events({
     let username = document.getElementById('hooklogin').value.trim()
     console.log(username);
 
-    var loginRequest = { pincode:username };
+    var loginRequest = { username:username };
 
     console.log(loginRequest)
 

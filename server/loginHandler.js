@@ -2,13 +2,13 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 
 	console.log(loginRequest)
 
-	if (!loginRequest.pincode) {
+	if (!loginRequest.username) {
 		return undefined;
 	}
 
 	//FETCH USERID from collection 'Pincodes'
-	var user = Pincodes.findOne({
-			pincode: loginRequest.pincode
+	var user = Meteor.users.findOne({
+			username: loginRequest.username
 		});;
 
 		console.log(user)
