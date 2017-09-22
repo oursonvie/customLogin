@@ -26,3 +26,9 @@ meteortoys:allthings
 
 promise
 deanius:promise
+
+kadira:flow-router
+kadira:blaze-layout
+
+http
+simple:json-routes
