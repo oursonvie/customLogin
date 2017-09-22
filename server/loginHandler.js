@@ -6,10 +6,32 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 		return undefined;
 	}
 
-	//FETCH USERID from collection 'Pincodes'
+	httpGetAsync('http://uc.silkroadst.ikcest.org/info',{params:{token:loginRequest.token}}).then(response => {
+		let res = response.data
+		console.log(res)
+
+		if (res.code == 200) {
+			let user = Meteor.users.findOne({username: loginRequest.username})
+			if (!user) {
+				return Accounts.createUser({
+					username: username,
+		      profile: {
+		        service: 'ikcest'
+		      },
+		      userBaseInfo: userBaseInfo
+				});
+			}
+		}
+
+	}).catch(err => {
+		console.log(err)
+	})
+
+/*
+
 	var user = Meteor.users.findOne({
 			username: loginRequest.username
-		});;
+		});
 
 		console.log(user)
 
@@ -51,5 +73,7 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 			};
 		}
 	}
+
+*/
 
 });

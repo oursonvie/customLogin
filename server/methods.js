@@ -8,13 +8,14 @@ Meteor.methods({
     })
 
   },
-  createNoPassUser: function(username) {
+  createNoPassUser: function(username, userBaseInfo) {
     console.log(username)
     return Accounts.createUser({
 			username: username,
       profile: {
         service: 'ikcest'
-      }
+      },
+      userBaseInfo: userBaseInfo
 		});
   }
 });

@@ -1,9 +1,25 @@
 Template.loginLanding.onCreated(function() {
   console.log(window.location.href)
-  var token = getParameterByName('token')
-  console.log(token)
 
-  
+  var token = getParameterByName('token')
+  var userName = getParameterByName('userName')
+  console.log(userName, token)
+
+  var loginRequest = {username:userName, token:token};
+
+  console.log(loginRequest)
+
+ Accounts.callLoginMethod({
+   methodArguments: [loginRequest],
+   userCallback: function (err) {
+       if (err) {
+         console.log(err)
+       } else {
+         console.log('logged in')
+       }
+   }});
+
+
 });
 
 function getParameterByName(name, url) {
