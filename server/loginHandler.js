@@ -14,12 +14,44 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 			let user = Meteor.users.findOne({username: loginRequest.username})
 			if (!user) {
 				return Accounts.createUser({
-					username: username,
+					username: loginRequest.username,
 		      profile: {
 		        service: 'ikcest'
 		      },
-		      userBaseInfo: userBaseInfo
+		      userBaseInfo: loginRequest.userBaseInfo
 				});
+			} else {
+				var userId = user._id;
+
+				console.log(userId)
+
+				var stampedToken = Accounts._generateStampedLoginToken();
+				var hashStampedToken = Accounts._hashStampedToken(stampedToken);
+
+				meteorAcconut = Meteor.users.findOne({_id: userId})
+
+				console.log(meteorAcconut)
+
+				if (!meteorAcconut) {
+					return {
+						userId: null,
+						error: "no user found"
+					}
+				} else {
+					Meteor.users.update(userId, {
+						$push: {
+							'services.resume.loginTokens': hashStampedToken
+						}
+				})
+			}
+
+			console.log('return login infor')
+
+			return {
+				userId: userId,
+				token: stampedToken.token
+			}
+
 			}
 		}
 
