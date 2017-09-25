@@ -7,28 +7,50 @@ Template.login.events({
     event.preventDefault();
     let username = document.getElementById('noPass').value.trim()
 
-    console.log(username);
+    let loginRequest = {username: username}
+
+    PromiseMeteorCall('checkUser', username).then(res => {
+      if(!res) {
+
+        PromiseMeteorCall('createNoPassUser', username).then(res => {
+          console.log(res)
 
 
-    // Meteor.call('createNoPassUser', username)
 
-    Meteor.callPromise('createNoPassUser', username).then(res => {
-      console.log(res)
+          // login user after creation
+          Accounts.callLoginMethod({
+            methodArguments: [loginRequest],
+            userCallback: function (err) {
+                if (err) {
+                  console.log(err)
+                } else {
+                  console.log('logged in')
+                }
+            }});
 
-      let loginRequest = {username: username}
+        })
 
-      // login user after creation
-      Accounts.callLoginMethod({
-        methodArguments: [loginRequest],
-        userCallback: function (err) {
-            if (err) {
-              console.log(err)
-            } else {
-              console.log('logged in')
-            }
-        }});
+      } else {
+        Accounts.callLoginMethod({
+          methodArguments: [loginRequest],
+          userCallback: function (err) {
+              if (err) {
+                console.log(err)
+              } else {
+                console.log('logged in')
+              }
+          }});
+      }
 
     })
 
+
+
   }
 });
+
+Template.login.helpers({
+  username: function() {
+    return Meteor.user().username
+  }
+})

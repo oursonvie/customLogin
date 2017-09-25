@@ -11,8 +11,6 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 			username: loginRequest.username
 		});;
 
-		console.log(user)
-
 	if (!user) {
 		return {
 			userId: null,
@@ -21,7 +19,6 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 	} else {
 		var userId = user._id;
 
-		console.log('userId: ' + userId)
 
 		// Create hashed token so user stays logged in
 		var stampedToken = Accounts._generateStampedLoginToken();
@@ -30,7 +27,7 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 
 		meteorAcconut = Meteor.users.findOne({_id: userId})
 
-		console.log(meteorAcconut)
+
 
 		if (!meteorAcconut) {
 			return {
@@ -44,6 +41,7 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 				}
 			});
 
+			console.log(meteorAcconut)
 
 			return {
 				userId: userId,

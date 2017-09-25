@@ -9,12 +9,21 @@ Meteor.methods({
 
   },
   createNoPassUser: function(username) {
-    console.log(username)
-    return Accounts.createUser({
+    var userId = Accounts.createUser({
 			username: username,
       profile: {
         service: 'ikcest'
       }
 		});
+    return userId
+  },
+  checkUser: function(username) {
+    if (Meteor.users.findOne({username:username})) {
+      console.log('true')
+      return true
+    } else {
+      console.log('false')
+      return false
+    }
   }
 });
