@@ -1,3 +1,10 @@
+Template.login.onCreated(function() {
+  var token = getParameterByName('token')
+  var username = getParameterByName('userName')
+  var lang = getParameterByName('lang')
+  Session.set('LoginInfo', {token:token, username:username, lang:lang})
+});
+
 Template.login.events({
   'click .btn-sm' () {
     console.log('logged out')
@@ -54,3 +61,13 @@ Template.login.helpers({
     return Meteor.user().username
   }
 })
+
+function getParameterByName(name, url) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, "\\$&");
+    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+        results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, " "));
+}

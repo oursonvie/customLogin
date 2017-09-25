@@ -1,9 +1,10 @@
 Template.loginLanding.onCreated(function() {
   console.log(window.location.href)
   var token = getParameterByName('token')
-  console.log(token)
+  var username = getParameterByName('userName')
+  var lang = getParameterByName('lang')
+  console.log(lang, username, token)
 
-  
 });
 
 function getParameterByName(name, url) {
