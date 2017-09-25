@@ -1,12 +1,10 @@
 Accounts.registerLoginHandler("pincode", function(loginRequest) {
 
-	console.log(loginRequest)
-
 	if (!loginRequest.username) {
 		return undefined;
 	}
 
-	//FETCH USERID from collection 'Pincodes'
+	// find user in user DB
 	var user = Meteor.users.findOne({
 			username: loginRequest.username
 		});;
@@ -27,8 +25,6 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 
 		meteorAcconut = Meteor.users.findOne({_id: userId})
 
-
-
 		if (!meteorAcconut) {
 			return {
 				userId: null,
@@ -40,8 +36,6 @@ Accounts.registerLoginHandler("pincode", function(loginRequest) {
 					'services.resume.loginTokens': hashStampedToken
 				}
 			});
-
-			console.log(meteorAcconut)
 
 			return {
 				userId: userId,

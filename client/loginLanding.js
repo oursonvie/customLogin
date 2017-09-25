@@ -3,16 +3,63 @@ Template.loginLanding.onCreated(function() {
   var token = getParameterByName('token')
   var username = getParameterByName('userName')
   var lang = getParameterByName('lang')
-  console.log(lang, username, token)
+
+  // console.log(lang, username, token)
+  //Session.set('loginInfo', {username:username, token:token, lang:lang})
+
+  PromiseMeteorCall('validateIkcest', username, token).then(res => {
+    if (res.code == 200 && username == res.userBaseInfo.userName) {
+      LoginUser(res.userBaseInfo)
+    }
+  }).catch(err => {
+    console.log(err)
+  })
 
 });
 
-function getParameterByName(name, url) {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, "\\$&");
-    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, " "));
+function LoginUser(baseInfo) {
+  let username = baseInfo.userName
+  // console.log(username)
+
+  let loginRequest = {username: username, baseInfo:baseInfo}
+
+  PromiseMeteorCall('checkUser', username).then(res => {
+    if(!res) {
+
+      PromiseMeteorCall('createNoPassUser', username, baseInfo).then(res => {
+        // console.log(res)
+
+        // login user after creation
+        Accounts.callLoginMethod({
+          methodArguments: [loginRequest],
+          userCallback: function (err) {
+              if (err) {
+                console.log(err)
+              } else {
+                console.log('logged in')
+
+                window.location.href = '/'
+
+              }
+          }});
+
+      })
+
+    } else {
+      Accounts.callLoginMethod({
+        methodArguments: [loginRequest],
+        userCallback: function (err) {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log('logged in')
+
+              window.location.href = '/'
+
+            }
+        }});
+    }
+
+  })
+
 }
